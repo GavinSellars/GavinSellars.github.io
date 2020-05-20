@@ -1,0 +1,153 @@
+<html><head>
+
+<link href="https://fonts.googleapis.com/css?family=Gayathri&display=swap" rel="stylesheet">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<style>
+		.parallaxA {
+		  /* The image used */
+		  background-image: url("images/1_Hydrogen.jpg");
+
+		  /* Set a specific height */
+		  min-height: 800px; 
+
+		  /* Create the parallax scrolling effect */
+		  background-attachment: fixed;
+		  background-position: center;
+		  background-repeat: no-repeat;
+		  background-size: auto;
+		}
+
+			.parallaxB {
+		  /* The image used */
+		  background-image: url("images/2_Helium.jpg");
+
+		  /* Set a specific height */
+		  min-height: 800px; 
+
+		  /* Create the parallax scrolling effect */
+		  background-attachment: fixed;
+		  background-position: center;
+		  background-repeat: no-repeat;
+		  background-size: auto;
+		}
+
+		.parallaxC {
+		  /* The image used */
+		  background-image: url("images/3_Lithium.jpg");
+
+		  /* Set a specific height */
+		  min-height: 800px; 
+
+		  /* Create the parallax scrolling effect */
+		  background-attachment: fixed;
+		  background-position: center;
+		  background-repeat: no-repeat;
+		  background-size: auto;
+		}
+
+		#mySidenav a {
+		  position: fixed;
+		  right: -180px;
+		  transition: 0.3s;
+		  padding: 15px;
+		  width: 300px;
+		  text-decoration: none;
+		  font-size: 20px;
+		  color: white;
+		  border-radius: 0 5px 5px 0;
+		  height: 200px;
+		}
+
+		#mySidenav a:hover {
+		  right: 0;
+		}
+
+		#about {
+		  top: 300px;
+		  background-color: #4CAF50;
+		}
+
+</style>
+
+</head>
+<body>
+
+
+<div id="mySidenav" class="sidenav">
+  		<a href="#" id="about" style="background: rgb(155, 217, 240);"><pre>Symbol: H
+Atomic mass: 1.00784
+Atomic number: 1
+Electrons per shell: 1
+Electronegativity: 2.2
+Isotopes:
+	Deuterium
+	Tritium
+</pre></a>
+ </div>
+
+
+<div class="parallaxA"></div>
+
+<div style="height:500px; width: 70%; margin: 0 auto;padding: 20px;background-image: linear-gradient(#9BD9F0, #E37564); font-family: 'Gayathri', sans-serif; font-size:36px">
+Scroll down and find out what happens!
+</div>
+
+
+<div class="parallaxB"></div>
+
+<div style="height:500px; width: 70%; margin: 0 auto;padding: 20px; background-image: linear-gradient(#E37564, #C4C4C4); font-family: 'Gayathri', sans-serif; font-size:36px">
+Keep on going :)
+</div>
+
+<div class="parallaxC"></div>
+
+<script>
+	window.addEventListener("scroll", myScript);
+
+
+	//The onbeforeload section I got from the below site. 
+	//https://stackoverflow.com/questions/3664381/force-page-scroll-position-to-top-at-page-refresh-in-html/39015137
+	window.onbeforeunload = function () {
+	  window.scrollTo(0, 0);
+	}
+
+	document.getElementById("about").style.background = "#9BD9F0"	
+
+
+	function myScript() {
+
+		console.log("scrolling");
+
+		//This is a line of code I took from StackOverflow.  
+		//https://stackoverflow.com/questions/11373741/detecting-by-how-much-user-has-scrolled
+		var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+		console.log(scrollTop)
+
+		if (scrollTop < 372) {
+			document.getElementById("about").style.background = "#9BD9F0"	
+
+			text = "<pre>Symbol: H\nAtomic mass: 1.00784\nAtomic number: 1\nElectrons per shell: 1\nElectronegativity: 2.2\nIsotopes:\n\tDeuterium\n\tTritium\n</pre>"
+			document.getElementById("about").innerHTML = text;
+		}
+		if (scrollTop >= 372) {
+			document.getElementById("about").style.background = "#E37564";
+			text = "hehe"
+			document.getElementById("about").innerHTML = text;
+		}
+		if (scrollTop >= 2390) {
+			document.getElementById("about").style.background = "#C4C4C4";
+			text = "no more scrolling for u hehe"
+			document.getElementById("about").innerHTML = text;
+		}
+	
+
+	}
+
+
+
+</script>
+
+
+</body></html>

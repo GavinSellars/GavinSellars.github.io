@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Home</title>
+
+  <style>
+      /* Add a black background color to the top navigation */
+    .topnav {
+      background-color: #333;
+      overflow: hidden;
+    }
+
+    /* Style the links inside the navigation bar */
+    .topnav a {
+      float: left;
+      color: #f2f2f2;
+      text-align: center;
+      padding: 20px 20px;
+      text-decoration: none;
+      font-size: 20px;
+    }
+
+    /* Change the color of links on hover */
+    .topnav a:hover {
+      background-color: #ddd;
+      color: black;
+    }
+
+
+
+    .verytop {
+      width: 100%;
+      color: black;
+      font-size: 120px;
+      padding: 1px 0px;
+      background-color: #FCC30B;
+      margin-inline-start: 0px;
+      margin-inline-end: 0px;
+      height: 300px;
+
+
+    }
+
+    .body {
+
+
+
+    }
+
+    #bodytitle {
+
+    font-size: 60px;
+    text-align: center;
+    width: 80%;
+
+
+    }
+
+
+    #frontfacts {
+
+      font-size: 35px;
+      height: 450px;
+      text-align: center;
+      background-color: #d3d3d3;
+      float: right;
+      width: 20%
+      
+    }
+
+    #frontfacts p {
+
+      font-size: 20px;
+
+    }
+
+    #text {
+
+      width: 80%;
+      font-size: 30px;
+      margin-inline-start: 20px;
+
+    }
+
+    #text2 {
+
+      width: 80%;
+      font-size: 30px;
+      margin-inline-start: 20px;
+    }
+
+    #windturbinesimage {
+      float: left;
+    }
+
+    #energygraphimage {
+      float: right;
+      padding-top: 20px;
+      padding-bottom: 20px;
+    }
+
+
+    .othersites {
+      height: 450px;
+      text-align: center;
+      background-color: #d3d3d3;
+      float: right;
+      width: 20%
+        }
+
+    .othersites p {
+      font-size: 15px;
+    }
+
+    #othersitestitle {
+      font-size: 35px;
+    }
+
+    #navp {
+
+        position: absolute;
+      left: 50%;
+      transform: translateX(-50%)
+    }
+       
+    </style>
+
+</head>
+<body>
+
+  <div class = "verytop"> 
+
+    <img id = titleimage src="E-WEB-Goal-07.jpg" alt="Error" style="width:300px; height:300px;float: left"/>
+
+      <p id = "navp">Goal 7</p>
+      <br><br><br>
+
+  </div>
+
+  <div class="topnav">
+    <a href="openingpage2.html">Goal 7!</a>
+    <a href="goal11.html">Goal 11</a>
+    <a href="correlation.html">Correlation</a>
+  </div>
+
+  <div class="body">
+
+    <div id = frontfacts>
+  
+      <u>Facts and Statistics</u>
+
+      <p>-13% of the global population still lacks access to modern electricity.
+      <p>-3 billion people rely on wood, coal, charcoal or animal waste for cooking and heating</p>
+      <p>-Energy is the dominant contributor to climate change, accounting for around 60 per cent of total global greenhouse gas emissions.</p>
+      <p>-Indoor air pollution from using combustible fuels for household energy caused 4.3 million deaths in 2012</p>
+
+    </div>
+
+    <div>
+      <p id = "bodytitle">Affordable and Clean Energy: The Way of the Future?</p>
+
+      <p id = "text">The 7th UN Sustainable development goal is Affordable and Clean energy. Between 1990 and 2010, the number of people with access to electricity has increased by 1.7 billion. There are still 860 million people without access to electricity and over 2.6 billion people do not have access to clean cooking facilities. Many people without access to electricity and clean cooking will eventualy receive access and the number of people without electricity and clean cooking will decrease. With such an influx of new people, what does this mean for the environment, how we use energy and what we use for evergy?</p>
+
+
+
+      <img id = windturbinesimage src="windturbines.jpg" alt="Error" />
+      <img id = "energygraphimage" src="energygraph.png" alt="Error"/>
+
+      <p id = "text2">.............The demand for energy is going to rise dramatically and the only way to sustain this influx of people will be to create clean and affordable energy so that it is available to all.</p>
+
+
+
+    </div>
+  
+    <div class="othersites">
+      <p id = "othersitestitle"><u>Other Sites to Read</u></p>
+      <a href = "https://sustainabledevelopment.un.org/sdg7">UN Website</a>
+      <p></p>
+      <a href="https://www.naturalcapitalpartners.com/sustainable-development-goals/goal/affordable-and-clean-energy">Natural Capital Partners</a>
+      <p></p>
+    <a href="https://www.iea.org/reports/sdg7-data-and-projections">IEA Org</a>
+</div>
+
+
+
+
+
+
+  <script>
+
+    window.addEventListener("scroll",getPosition);
+
+
+    function getPosition(element) {
+        var xPosition = 0;
+        var yPosition = 0;
+        var element = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop; 
+
+
+        xPosition += (offsetLeft - element.scrollLeft + element.clientLeft);
+
+        // yPositioelementn += (element.offsetTop - element.scrollTop + element.clientTop);
+        
+
+       // console.log("("+xPosition+","+element+")");
+
+//        console.log(element)
+        // if (element>200){
+        //   var otherSites = document.getElementById("othersites")
+        //   console.log(othersites)
+        //  othersites.style.right = "500%";
+        // }
+
+
+
+    }
+
+  </script>
+
+</body>
+</html>

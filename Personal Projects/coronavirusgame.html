@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+
+
+	<title>Coronavirus Game</title>
+
+	<style type="text/css">
+		
+		canvas {position: absolute;
+    			top: 50%;
+    			left: 50%;
+    			transform: translate(-50%, -50%);
+    			width: 600px;
+    			height: 600px;
+    			border: 5px solid black;
+    			background-color: #AA3939;
+			}
+
+		#instructions {
+			height: 600px;
+			width: 100%;
+			text-align: center;
+			font-size: 30px;
+		}
+
+		#instructionstwo {
+			height: 600px;
+			width: 100%;
+			text-align: center;
+			font-size: 30px;
+		}
+
+		#gameover {
+			height: 780px;
+			width: 100%;
+			text-align: center;
+			font-size: 70px;
+			background-color: black;
+			color: red;
+		}
+
+		#coronavirusimage {
+		  opacity: 1;
+		}
+
+
+	</style>
+</head>
+<body>
+
+
+<div id="instructions">
+	
+	<p>You are a white blood cell and it is your duty to protect your body. </p>
+
+	<p>Your body has not respected social distancing laws and has been within 1 meter of somebody with the coronavirus which made it susceptible to catching it from their breathing.</p>
+
+	<p>Instead of washing its hands, your body has been touching its face which allowed COVID-19 to enter the body.</p>
+
+	<p>After showing symptoms such as lost of taste, coughing and breathlessness, you have determined that your body has been infected by COVID-19.</p>
+
+	<p>The coronavirus has nested itself in the lungs and it is up to you to defeat COVID-19 and save your body.</p> 
+
+	<p>Use the W, A, S and D keys to move up, left, down and right respectively. (Alternatively, the arrow keys can be used as well.)</p>
+
+	<p>Good luck.</p>
+
+	<p>-----------------</p>
+
+	<p>spacebar = continue with normal mode </p>
+
+	<p>p = continue with practice mode </p>
+
+</div>
+
+<div id="instructionstwo" style="display: none;">
+	<p>By passing through the door to the lungs, you have sealed yourself inside of the lungs unless you either defeat the coronavirus, or perish.</p>
+
+	<p>Dodge the obstacles that the coronavirus moves towards you.</p> 
+
+	<p>After some time, the coronavirus will need to recharge.</p>
+
+	<p>This will be your oppourtunity to strike.</p>
+
+	<p>Move up to the coronavirus and make direct contact with it.</p>
+
+	<p>This will cause it to shake and lose a life.</p>
+
+	<p>If you are fast enough, you may be able to reach the coronavirus before it finishes with its obstacles.</p>
+
+	<p>If it loses all of its lives, you will be victorious, but if you get hit by an obstacle, you will perish.</p>
+
+	<p>Good luck.</p>
+
+	<p>-----------------</p>
+
+	<p>Press spacebar to continue.</p>
+
+</div>
+
+<div id="gameover" style="display: none;">
+
+	<p>GAME OVER</p>
+
+	<p>REFRESH PAGE TO RESTART GAME</p>
+
+</div>
+
+<div id="game" style="display:none;">
+
+	<canvas id="myCanvasOne" width="600" height="600"></canvas>
+
+</div>
+
+<img id="coronavirusimage" style="display: none;" src="coronavirus.png">
+
+<img id="skull" style="display: none;" src="dead.png">
+
+<script type="text/javascript">
+	
+var canvas = document.getElementById("myCanvasOne");
+var ctx = canvas.getContext("2d");
+var characterX = 300
+var characterY = 550
+var characterRadius = 15
+var rightPressed = false;
+var leftPressed = false;
+var upPressed = false;
+var downPressed = false;
+var spacebarPressed = false;
+var practicemodePressed = false;
+var spacebarcounter = 0;
+var runscene = 0;
+var istouchingcorona = false;
+var blockwaveoneheight = 65;
+var blockwavetwoheight = 65;
+var blockwavethreeheight = 50;
+var coronaviruslives = 3;
+var practicemode = false;
+
+
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+
+function keyDownHandler(e) {
+    if(e.keyCode === 68 || e.keyCode === 39) { //d or right
+        rightPressed = true;
+    }
+    if(e.keyCode === 83 || e.keyCode === 40) { //s or down
+        downPressed = true;
+    }
+    if(e.keyCode === 65 || e.keyCode === 37) { //a or left
+        leftPressed = true;
+    }
+    if(e.keyCode === 87 || e.keyCode === 38) {//w or up
+        upPressed = true;
+    }
+    if(e.keyCode === 80) {
+		practicemodePressed = true;
+	}
+    if(e.keyCode === 32) { //spacebar
+		spacebarPressed = true;
+	}
+}
+
+function keyUpHandler(e) {
+    if(e.keyCode === 68  || e.keyCode === 39) {
+        rightPressed = false;
+    }
+    if(e.keyCode === 83 || e.keyCode === 40) {
+        downPressed = false;
+    }
+    if(e.keyCode === 65 || e.keyCode === 37) {
+        leftPressed = false;
+    }
+    if(e.keyCode === 87  || e.keyCode === 38) {
+        upPressed = false;
+    }
+    if(e.keyCode === 80) {
+		practicemodePressed = false;
+	}
+    if(e.keyCode === 32) {
+		spacebarPressed = false;
+	}
+}
+
+function movement(){
+
+	if(rightPressed) {
+		    characterX += 3
+			}
+	if(leftPressed) {
+		    characterX -= 3
+		}
+	if(upPressed) {
+		    characterY -= 3
+		}
+	if(downPressed) {
+		    characterY += 3
+		}
+
+}
+
+//shaking
+function preShake() {
+  ctx.save();
+  var dx = Math.random()*10;
+  var dy = Math.random()*10;
+  ctx.translate(dx, dy);  
+}
+
+function postShake() {
+  ctx.restore();
+}
+
+function drawThings() {  
+  var img = document.getElementById("coronavirusimage");
+  ctx.drawImage(img, 277.5, 10);
+}
+
+function animate() {
+  if(istouchingcorona === true){  	
+		
+		requestAnimationFrame(animate);
+
+		ctx.clearRect(250, 0, 100, canvas.height);
+
+		character();
+
+		preShake();
+
+		drawThings();
+
+		postShake();
+	}
+}
+
+//character
+function character() {
+	ctx.beginPath();
+	ctx.arc(characterX, characterY, characterRadius, 0, Math.PI*2);
+	ctx.fillStyle = "white";
+	ctx.fill();
+	ctx.closePath();
+}
+
+//first scene
+function firstlandscape() {
+	//grass
+	ctx.beginPath();
+	ctx.rect(0, 200, 600, 400);
+	ctx.fillStyle = "green";
+	ctx.fill();
+	ctx.closePath();
+
+	//sky
+	ctx.beginPath();
+	ctx.rect(0, 0, 600, 200);
+	ctx.fillStyle = "lightblue";
+	ctx.fill();
+	ctx.closePath();
+
+	//building
+	ctx.beginPath();
+	ctx.rect(100, 100, 400, 200);
+	ctx.fillStyle = "#AA3939";
+	ctx.fill();
+	ctx.closePath();
+
+	//title
+	ctx.font = "30px Arial";
+	ctx.fillStyle = "black";
+	ctx.fillText("ENTER: LUNGS", 190, 130);
+
+	//door
+	ctx.beginPath();
+	ctx.rect(270, 230, 60, 70);
+	ctx.fillStyle = "black";
+	ctx.fill();
+	ctx.closePath();
+
+	//path
+	ctx.beginPath();
+	ctx.rect(270, 300, 60, 300);
+	ctx.fillStyle = "#AA3939";
+	ctx.fill();
+	ctx.closePath();
+
+}
+
+//second scene
+function secondlandscape() {
+	drawThings();
+	showlife();
+}
+
+//remove first landscape
+function removefirstlandscape() {
+	ctx.clearRect(0, 0, 600, 600);
+}
+
+//countdown
+function countdownthree(whichscene) {
+	ctx.clearRect(0, 200, canvas.width, 400);
+	character();
+	ctx.font = "40px Arial";
+	ctx.fillStyle = "black";
+	ctx.fillText("3", 300, 300);
+	setTimeout(function(){runscene = whichscene}, 1000);
+}
+
+function countdowntwo(whichscene) {
+	ctx.clearRect(0, 200, canvas.width, 400);
+	character();
+	ctx.font = "40px Arial";
+	ctx.fillStyle = "black";
+	ctx.fillText("2", 300, 300);
+	setTimeout(function(){runscene = whichscene}, 1000);
+}
+
+
+function countdownone(whichscene) {
+	ctx.clearRect(0, 200, canvas.width, 400);
+	character();
+	ctx.font = "40px Arial";
+	ctx.fillStyle = "black";
+	ctx.fillText("1", 300, 300);
+	setTimeout(function() {runscene = whichscene}, 1000);
+}
+
+function makeblock (x, y, width, height) {
+	ctx.beginPath();
+	ctx.rect(x, y, width, height);
+	ctx.fillStyle = "black";
+	ctx.fill();
+	ctx.closePath();
+}
+
+function detectionparameters(height1, height2, width1, width2) {
+
+	if(characterY >= blockwaveoneheight - height1 && characterY <= blockwaveoneheight - height2 && characterX < width1 || characterY >= blockwaveoneheight - height1 && characterY <= blockwaveoneheight - height2 && characterX > width2) {
+			runscene = 7;
+		}
+}
+
+function detectionparameters2(height1, height2, width1, width2) {
+
+	if(characterY >= blockwavetwoheight - height1 && characterY <= blockwavetwoheight - height2 && characterX < width1 || characterY >= blockwavetwoheight - height1 && characterY <= blockwavetwoheight - height2 && characterX > width2) {
+			runscene = 7;
+		}
+}
+
+function detectionparameters3(height1, height2, width1, width2) {
+
+	if(characterY >= blockwavethreeheight - height1 && characterY <= blockwavethreeheight - height2 && characterX < width1 || characterY >= blockwavethreeheight - height1 && characterY <= blockwavethreeheight - height2 && characterX > width2) {
+			runscene = 7;
+		}
+}
+
+function waveone() {
+
+	makeblock(0, blockwaveoneheight, 100, 30);
+	makeblock(110, blockwaveoneheight, 100, 30);
+	makeblock(220, blockwaveoneheight, 100, 30);
+	makeblock(330, blockwaveoneheight, 100, 30);
+	makeblock(440, blockwaveoneheight, 100, 30);
+
+	makeblock(0, (blockwaveoneheight-200), 100, 30);
+	makeblock(110, (blockwaveoneheight-200), 100, 30);
+	makeblock(220, (blockwaveoneheight-200), 100, 30);
+	makeblock(440, (blockwaveoneheight-200), 100, 30);
+	makeblock(550, (blockwaveoneheight-200), 100, 30);
+
+	makeblock(0, (blockwaveoneheight-400), 100, 30);
+	makeblock(110, (blockwaveoneheight-400), 100, 30);
+	makeblock(330, (blockwaveoneheight-400), 100, 30);
+	makeblock(440, (blockwaveoneheight-400), 100, 30);
+	makeblock(550, (blockwaveoneheight-400), 100, 30);
+
+	makeblock(0, (blockwaveoneheight-600), 100, 30);
+	makeblock(110, (blockwaveoneheight-600), 100, 30);
+	makeblock(220, (blockwaveoneheight-600), 100, 30);
+	makeblock(330, (blockwaveoneheight-600), 100, 30);
+	makeblock(550, (blockwaveoneheight-600), 100, 30);
+
+	makeblock(0, (blockwaveoneheight-800), 100, 30);
+	makeblock(110, (blockwaveoneheight-800), 100, 30);
+	makeblock(220, (blockwaveoneheight-800), 100, 30);
+	makeblock(330, (blockwaveoneheight-800), 100, 30);
+	makeblock(440, (blockwaveoneheight-800), 100, 30);
+
+	makeblock(0, (blockwaveoneheight-1000), 100, 30);
+	makeblock(110, (blockwaveoneheight-1000), 100, 30);
+	makeblock(220, (blockwaveoneheight-1000), 100, 30);
+	makeblock(440, (blockwaveoneheight-1000), 100, 30);
+	makeblock(550, (blockwaveoneheight-1000), 100, 30);
+
+	makeblock(110, (blockwaveoneheight-1200), 100, 30);
+	makeblock(220, (blockwaveoneheight-1200), 100, 30);
+	makeblock(330, (blockwaveoneheight-1200), 100, 30);
+	makeblock(440, (blockwaveoneheight-1200), 100, 30);
+	makeblock(550, (blockwaveoneheight-1200), 100, 30);
+
+	makeblock(0, (blockwaveoneheight-1400), 100, 30);
+	makeblock(110, (blockwaveoneheight-1400), 100, 30);
+	makeblock(330, (blockwaveoneheight-1400), 100, 30);
+	makeblock(440, (blockwaveoneheight-1400), 100, 30);
+	makeblock(550, (blockwaveoneheight-1400), 100, 30);
+
+	ctx.font = "30px Arial";
+	ctx.fillStyle = "black";
+	ctx.fillText("TOUCH THE CORONAVIRUS!", 100, blockwaveoneheight - 1600);
+}
+
+function wavetwo() {
+
+		makeblock(0, blockwavetwoheight, 100, 30);
+		makeblock(110, blockwavetwoheight, 100, 30);
+		makeblock(220, blockwavetwoheight, 100, 30);
+		makeblock(330, blockwavetwoheight, 100, 30);
+		makeblock(440, blockwavetwoheight, 100, 30);
+
+		makeblock(110, (blockwavetwoheight-400), 100, 30);
+		makeblock(220, (blockwavetwoheight-400), 100, 30);
+		makeblock(330, (blockwavetwoheight-400), 100, 30);
+		makeblock(440, (blockwavetwoheight-400), 100, 30);
+		makeblock(550, (blockwavetwoheight-400), 100, 30);
+
+		makeblock(0, blockwavetwoheight-800, 100, 30);
+		makeblock(110, blockwavetwoheight-800, 100, 30);
+		makeblock(220, blockwavetwoheight-800, 100, 30);
+		makeblock(330, blockwavetwoheight-800, 100, 30);
+		makeblock(440, blockwavetwoheight-800, 100, 30);
+
+		makeblock(0, (blockwavetwoheight-1200), 100, 30);
+		makeblock(220, (blockwavetwoheight-1200), 100, 30);
+		makeblock(330, (blockwavetwoheight-1200), 100, 30);
+		makeblock(440, (blockwavetwoheight-1200), 100, 30);
+		makeblock(550, (blockwavetwoheight-1200), 100, 30);
+
+		makeblock(0, (blockwavetwoheight-1400), 100, 30);
+		makeblock(110, (blockwavetwoheight-1400), 100, 30);
+		makeblock(330, (blockwavetwoheight-1400), 100, 30);
+		makeblock(440, (blockwavetwoheight-1400), 100, 30);
+		makeblock(550, (blockwavetwoheight-1400), 100, 30);
+
+		makeblock(0, blockwavetwoheight-1600, 100, 30);
+		makeblock(110, blockwavetwoheight-1600, 100, 30);
+		makeblock(220, blockwavetwoheight-1600, 100, 30);
+		makeblock(330, blockwavetwoheight-1600, 100, 30);
+		makeblock(440, blockwavetwoheight-1600, 100, 30);
+
+		makeblock(0, (blockwavetwoheight-1800), 100, 30);
+		makeblock(110, (blockwavetwoheight-1800), 100, 30);
+		makeblock(220, (blockwavetwoheight-1800), 100, 30);
+		makeblock(330, (blockwavetwoheight-1800), 100, 30);
+		makeblock(550, (blockwavetwoheight-1800), 100, 30);
+
+		makeblock(0, (blockwavetwoheight-2000), 100, 30);
+		makeblock(110, (blockwavetwoheight-2000), 100, 30);
+		makeblock(330, (blockwavetwoheight-2000), 100, 30);
+		makeblock(440, (blockwavetwoheight-2000), 100, 30);
+		makeblock(550, (blockwavetwoheight-2000), 100, 30);
+
+		makeblock(110, (blockwavetwoheight-2200), 100, 30);
+		makeblock(220, (blockwavetwoheight-2200), 100, 30);
+		makeblock(330, (blockwavetwoheight-2200), 100, 30);
+		makeblock(440, (blockwavetwoheight-2200), 100, 30);
+		makeblock(550, (blockwavetwoheight-2200), 100, 30);
+
+		makeblock(0, (blockwavetwoheight-2400), 100, 30);
+		makeblock(110, (blockwavetwoheight-2400), 100, 30);
+		makeblock(220, (blockwavetwoheight-2400), 100, 30);
+		makeblock(440, (blockwavetwoheight-2400), 100, 30);
+		makeblock(550, (blockwavetwoheight-2400), 100, 30);
+
+		makeblock(0, blockwavetwoheight-2600, 100, 30);
+		makeblock(110, blockwavetwoheight-2600, 100, 30);
+		makeblock(220, blockwavetwoheight-2600, 100, 30);
+		makeblock(330, blockwavetwoheight-2600, 100, 30);
+		makeblock(440, blockwavetwoheight-2600, 100, 30);
+
+		makeblock(0, (blockwavetwoheight-2800), 100, 30);
+		makeblock(220, (blockwavetwoheight-2800), 100, 30);
+		makeblock(330, (blockwavetwoheight-2800), 100, 30);
+		makeblock(440, (blockwavetwoheight-2800), 100, 30);
+		makeblock(550, (blockwavetwoheight-2800), 100, 30);
+
+		makeblock(0, (blockwavetwoheight-3000), 100, 30);
+		makeblock(110, (blockwavetwoheight-3000), 100, 30);
+		makeblock(220, (blockwavetwoheight-3000), 100, 30);
+		makeblock(440, (blockwavetwoheight-3000), 100, 30);
+		makeblock(550, (blockwavetwoheight-3000), 100, 30);
+
+		makeblock(0, (blockwavetwoheight-3200), 100, 30);
+		makeblock(220, (blockwavetwoheight-3200), 100, 30);
+		makeblock(330, (blockwavetwoheight-3200), 100, 30);
+		makeblock(440, (blockwavetwoheight-3200), 100, 30);
+		makeblock(550, (blockwavetwoheight-3200), 100, 30);
+
+		makeblock(0, (blockwavetwoheight-3400), 100, 30);
+		makeblock(110, (blockwavetwoheight-3400), 100, 30);
+		makeblock(220, (blockwavetwoheight-3400), 100, 30);
+		makeblock(440, (blockwavetwoheight-3400), 100, 30);
+		makeblock(550, (blockwavetwoheight-3400), 100, 30);
+
+		makeblock(0, (blockwavetwoheight-3600), 100, 30);
+		makeblock(110, (blockwavetwoheight-3600), 100, 30);
+		makeblock(330, (blockwavetwoheight-3600), 100, 30);
+		makeblock(440, (blockwavetwoheight-3600), 100, 30);
+		makeblock(550, (blockwavetwoheight-3600), 100, 30);
+
+		makeblock(0, (blockwavetwoheight-3800), 100, 30);
+		makeblock(110, (blockwavetwoheight-3800), 100, 30);
+		makeblock(220, (blockwavetwoheight-3800), 100, 30);
+		makeblock(440, (blockwavetwoheight-3800), 100, 30);
+		makeblock(550, (blockwavetwoheight-3800), 100, 30);
+
+		ctx.font = "30px Arial";
+		ctx.fillStyle = "black";
+		ctx.fillText("TOUCH THE CORONAVIRUS!", 100, blockwavetwoheight - 4000);
+	
+}
+
+function wavethree() {
+
+	makeblock(0, blockwavethreeheight, 100, 30);
+	makeblock(110, blockwavethreeheight, 100, 30);
+	makeblock(220, blockwavethreeheight, 100, 30);
+	makeblock(330, blockwavethreeheight, 100, 30);
+	makeblock(440, blockwavethreeheight, 100, 30);
+
+	makeblock(0, blockwavethreeheight-150, 100, 30);
+	makeblock(110, blockwavethreeheight-150, 100, 30);
+	makeblock(220, blockwavethreeheight-150, 100, 30);
+	makeblock(330, blockwavethreeheight-150, 100, 30);
+	makeblock(550, blockwavethreeheight-150, 100, 30);
+
+	makeblock(0, blockwavethreeheight-300, 100, 30);
+	makeblock(110, blockwavethreeheight-300, 100, 30);
+	makeblock(330, blockwavethreeheight-300, 100, 30);
+	makeblock(440, blockwavethreeheight-300, 100, 30);
+	makeblock(550, blockwavethreeheight-300, 100, 30);
+
+	makeblock(0, blockwavethreeheight-450, 100, 30);
+	makeblock(110, blockwavethreeheight-450, 100, 30);
+	makeblock(220, blockwavethreeheight-450, 100, 30);
+	makeblock(330, blockwavethreeheight-450, 100, 30);
+	makeblock(440, blockwavethreeheight-450, 100, 30);
+
+	makeblock(0, blockwavethreeheight-600, 100, 30);
+	makeblock(110, blockwavethreeheight-600, 100, 30);
+	makeblock(220, blockwavethreeheight-600, 100, 30);
+	makeblock(330, blockwavethreeheight-600, 100, 30);
+	makeblock(550, blockwavethreeheight-600, 100, 30);
+
+	makeblock(0, blockwavethreeheight-750, 100, 30);
+	makeblock(110, blockwavethreeheight-750, 100, 30);
+	makeblock(220, blockwavethreeheight-750, 100, 30);
+	makeblock(440, blockwavethreeheight-750, 100, 30);
+	makeblock(550, blockwavethreeheight-750, 100, 30);
+
+	makeblock(0, blockwavethreeheight-900, 100, 30);
+	makeblock(110, blockwavethreeheight-900, 100, 30);
+	makeblock(330, blockwavethreeheight-900, 100, 30);
+	makeblock(440, blockwavethreeheight-900, 100, 30);
+	makeblock(550, blockwavethreeheight-900, 100, 30);
+
+	makeblock(0, blockwavethreeheight-1050, 100, 30);
+	makeblock(220, blockwavethreeheight-1050, 100, 30);
+	makeblock(330, blockwavethreeheight-1050, 100, 30);
+	makeblock(440, blockwavethreeheight-1050, 100, 30);
+	makeblock(550, blockwavethreeheight-1050, 100, 30);
+
+	makeblock(0, blockwavethreeheight-1200, 100, 30);
+	makeblock(220, blockwavethreeheight-1200, 100, 30);
+	makeblock(330, blockwavethreeheight-1200, 100, 30);
+	makeblock(440, blockwavethreeheight-1200, 100, 30);
+	makeblock(550, blockwavethreeheight-1200, 100, 30);
+
+	makeblock(0, blockwavethreeheight - 1400, 100, 30);
+	makeblock(110, blockwavethreeheight - 1400, 100, 30);
+	makeblock(220, blockwavethreeheight - 1400, 100, 30);
+	makeblock(330, blockwavethreeheight - 1400, 100, 30);
+	makeblock(440, blockwavethreeheight - 1400, 100, 30);
+
+	makeblock(0, blockwavethreeheight - 1600, 100, 30);
+	makeblock(110, blockwavethreeheight-1600, 100, 30);
+	makeblock(220, blockwavethreeheight-1600, 100, 30);
+	makeblock(330, blockwavethreeheight-1600, 100, 30);
+	makeblock(550, blockwavethreeheight-1600, 100, 30);
+
+	makeblock(0, blockwavethreeheight-1800, 100, 30);
+	makeblock(110, blockwavethreeheight-1800, 100, 30);
+	makeblock(330, blockwavethreeheight-1800, 100, 30);
+	makeblock(440, blockwavethreeheight-1800, 100, 30);
+	makeblock(550, blockwavethreeheight-1800, 100, 30);
+
+	makeblock(0, blockwavethreeheight-2000, 100, 30);
+	makeblock(110, blockwavethreeheight-2000, 100, 30);
+	makeblock(220, blockwavethreeheight-2000, 100, 30);
+	makeblock(330, blockwavethreeheight-2000, 100, 30);
+	makeblock(440, blockwavethreeheight-2000, 100, 30);
+
+	makeblock(0, blockwavethreeheight-2125, 100, 30);
+	makeblock(110, blockwavethreeheight-2125, 100, 30);
+	makeblock(220, blockwavethreeheight-2125, 100, 30);
+	makeblock(440, blockwavethreeheight-2125, 100, 30);
+	makeblock(550, blockwavethreeheight-2125, 100, 30);
+
+	makeblock(0, blockwavethreeheight-2250, 100, 30);
+	makeblock(110, blockwavethreeheight-2250, 100, 30);
+	makeblock(220, blockwavethreeheight-2250, 100, 30);
+	makeblock(330, blockwavethreeheight-2250, 100, 30);
+	makeblock(550, blockwavethreeheight-2250, 100, 30);
+
+	makeblock(0, blockwavethreeheight-2375, 100, 30);
+	makeblock(110, blockwavethreeheight-2375, 100, 30);
+	makeblock(220, blockwavethreeheight-2375, 100, 30);
+	makeblock(440, blockwavethreeheight-2375, 100, 30);
+	makeblock(550, blockwavethreeheight-2375, 100, 30);
+
+	makeblock(0, blockwavethreeheight-2500, 100, 30);
+	makeblock(110, blockwavethreeheight-2500, 100, 30);
+	makeblock(330, blockwavethreeheight-2500, 100, 30);
+	makeblock(440, blockwavethreeheight-2500, 100, 30);
+	makeblock(550, blockwavethreeheight-2500, 100, 30);
+
+	makeblock(0, blockwavethreeheight-2625, 100, 30);
+	makeblock(220, blockwavethreeheight-2625, 100, 30);
+	makeblock(330, blockwavethreeheight-2625, 100, 30);
+	makeblock(440, blockwavethreeheight-2625, 100, 30);
+	makeblock(550, blockwavethreeheight-2625, 100, 30);
+
+	makeblock(0, blockwavethreeheight-2750, 100, 30);
+	makeblock(110, blockwavethreeheight-2750, 100, 30);
+	makeblock(330, blockwavethreeheight-2750, 100, 30);
+	makeblock(440, blockwavethreeheight-2750, 100, 30);
+	makeblock(550, blockwavethreeheight-2750, 100, 30);
+
+	makeblock(0, blockwavethreeheight-2875, 100, 30);
+	makeblock(110, blockwavethreeheight-2875, 100, 30);
+	makeblock(220, blockwavethreeheight-2875, 100, 30);
+	makeblock(440, blockwavethreeheight-2875, 100, 30);
+	makeblock(550, blockwavethreeheight-2875, 100, 30);
+
+	makeblock(0, blockwavethreeheight-3000, 100, 30);
+	makeblock(220, blockwavethreeheight-3000, 100, 30);
+	makeblock(330, blockwavethreeheight-3000, 100, 30);
+	makeblock(440, blockwavethreeheight-3000, 100, 30);
+	makeblock(550, blockwavethreeheight-3000, 100, 30);
+
+	ctx.font = "30px Arial";
+	ctx.fillStyle = "black";
+	ctx.fillText("TOUCH THE CORONAVIRUS!", 100, blockwavethreeheight - 3200);
+}
+
+
+function waveonecollisiondetection() {
+
+	detectionparameters(15, -45, 555, 600);
+	detectionparameters(215, 155, 335, 425);
+	detectionparameters(415, 355, 225, 315);
+	detectionparameters(615, 555, 445, 535);
+	detectionparameters(815, 755, 555, 600);
+	detectionparameters(1015, 955, 335, 425);
+	detectionparameters(1215, 1155, 0, 95);
+	detectionparameters(1415, 1355, 225, 315);
+}
+
+function wavetwocollisiondetection() {
+	
+		detectionparameters2(15, -45, 555, 600);
+		detectionparameters2(415, 355, 0, 95);
+		detectionparameters2(815, 755, 555, 600); 
+		detectionparameters2(1215, 1155, 115, 205);
+		detectionparameters2(1415, 1355, 225, 315);
+		detectionparameters2(1615, 1555, 555, 600);
+		detectionparameters2(1815, 1755, 445, 535);
+		detectionparameters2(2015, 1955, 225, 315);
+		detectionparameters2(2215, 2155, 0, 95);
+		detectionparameters2(2415, 2355, 335, 425);
+		detectionparameters2(2615, 2555, 555, 600);
+		detectionparameters2(2815, 2755, 115, 205);
+		detectionparameters2(3015, 2955, 335, 425);
+		detectionparameters2(3215, 3155, 115, 205);
+		detectionparameters2(3415, 3355, 335, 425);
+		detectionparameters2(3615, 3555, 225, 315);
+		detectionparameters2(3815, 3755, 335, 425);
+}
+
+function wavethreecollisiondetection() {
+
+	detectionparameters3(15, -45, 555, 600);
+	detectionparameters3(165, 105, 445, 535);
+	detectionparameters3(315, 255, 225, 315);
+	detectionparameters3(465, 405, 555, 600);
+	detectionparameters3(615, 555, 445, 535);
+	detectionparameters3(765, 705, 335, 425);
+	detectionparameters3(915, 855, 225, 315);
+	detectionparameters3(1065, 1005, 115, 205);
+	detectionparameters3(1215, 1155, 115, 205);
+	detectionparameters3(1415, 1355, 555, 600);
+	detectionparameters3(1615, 1555, 445, 535);
+	detectionparameters3(1815, 1755, 225, 315);
+	detectionparameters3(2015, 1955, 555, 600);
+	detectionparameters3(2140, 2080, 335, 425);
+	detectionparameters3(2265, 2205, 445, 535);
+	detectionparameters3(2390, 2330, 335, 425);
+	detectionparameters3(2515, 2455, 225, 315);
+	detectionparameters3(2640, 2580, 115, 205);
+	detectionparameters3(2765, 2705, 225, 315);
+	detectionparameters3(2890, 2830, 335, 425);
+	detectionparameters3(3015, 2955, 115, 205);
+}
+
+function showlife() {
+
+	ctx.font = "14px Arial";
+	ctx.fillStyle = "black";
+	ctx.fillText("HP", 4, 12);
+	
+	if(coronaviruslives === 3){
+		ctx.beginPath();
+		ctx.rect(30, 2, 210, 10);
+		ctx.fillStyle = "green";
+		ctx.fill();
+		ctx.closePath();
+	}
+
+	if(coronaviruslives === 2){
+		ctx.beginPath();
+		ctx.rect(30, 2, 150, 10);
+		ctx.fillStyle = "green";
+		ctx.fill();
+		ctx.closePath();
+
+		ctx.beginPath();
+		ctx.rect(150, 2, 60, 10);
+		ctx.fillStyle = "red";
+		ctx.fill();
+		ctx.closePath();
+	}
+
+	if(coronaviruslives === 1) {
+		ctx.beginPath();
+		ctx.rect(30, 2, 90, 10);
+		ctx.fillStyle = "green";
+		ctx.fill();
+		ctx.closePath();
+
+		ctx.beginPath();
+		ctx.rect(90, 2, 210, 10);
+		ctx.fillStyle = "red";
+		ctx.fill();
+		ctx.closePath();
+	}
+
+	if(coronaviruslives === 0) {
+		ctx.beginPath();
+		ctx.rect(30, 2, 210, 10);
+		ctx.fillStyle = "red";
+		ctx.fill();
+		ctx.closePath();
+	}
+
+}
+
+function deadimg() {
+	var deathimg = document.getElementById("skull");
+  	ctx.drawImage(deathimg, 277.5, 10);
+}
+
+
+overall = function() {
+
+	if(runscene === 0){
+		
+		if(spacebarcounter === 0){
+			if(rightPressed) {
+			    characterX += -3
+				}
+			else if(leftPressed) {
+			    characterX -= -3
+			}
+			else if(upPressed) {
+			    characterY -= -3
+			}
+			else if(downPressed) {
+			    characterY += -3
+			}
+		}
+
+		if(spacebarPressed) {
+			spacebarcounter = 1;
+			instructions.style.display = "none";
+			game.style.display = "inline-block";
+		}
+		if(practicemodePressed) {
+			spacebarcounter = 1;
+			practicemode = true;
+			instructions.style.display = "none";
+			game.style.display = "inline-block";
+		}
+			firstlandscape();
+			character();
+
+
+			movement();
+
+			if(characterX < 285){
+				characterX = 285;
+			}
+			
+			if(characterX > 315){
+				characterX = 315;
+			}
+
+			if(characterY > 585){
+				characterY = 585;
+			}
+
+			if(characterY < 290){
+				removefirstlandscape();
+				runscene = 1;
+			}	
+	}
+
+	if(runscene === 1){
+		characterX = 300;
+		characterY = 585;
+		runscene = 2;
+	}
+
+	if(runscene === 2){
+		game.style.display = "none";
+		instructionstwo.style.display = "inline-block";
+			
+		if(spacebarPressed) {
+			spacebarcounter = 2;
+			}	
+
+
+		if(spacebarcounter === 2){
+			runscene = 3;
+		}
+	}
+
+	if(runscene === 3){
+		instructionstwo.style.display = "none";
+		game.style.display = "inline-block";
+
+		secondlandscape();
+		character();
+		showlife();
+
+		countdownthree(4);
+	}
+
+	if(runscene === 4){
+
+		countdowntwo(5);
+	}
+
+	if(runscene === 5){
+
+		countdownone(6);
+	}
+
+	if(runscene === 6){
+		ctx.clearRect(0,0,canvas.width, canvas.height);
+
+		showlife();
+
+		waveone();
+
+		if(practicemode === true){
+			blockwaveoneheight = blockwaveoneheight + 1.8;
+		}
+		if(practicemode === false) {
+			blockwaveoneheight = blockwaveoneheight + 2.5;
+		}
+
+		waveonecollisiondetection();
+
+		secondlandscape();
+		character();
+		movement();
+
+		if(characterX > 585){
+			characterX = 585;
+		}
+			
+		if(characterX < 13){
+			characterX = 13;
+		}
+
+		if(characterY > 585){
+			characterY = 585;
+		}
+
+		if(characterY < 78){
+			characterY = 78;
+		}	
+
+		if(characterY === 78 && characterX <=315 && characterX >= 285){ 
+
+			runscene = 8;
+		}
+	}
+
+	if(runscene === 7){
+		game.style.display = "none";
+		gameover.style.display = "inline-block";
+	}
+
+	if(runscene === 8){
+		ctx.clearRect(0,0,canvas.width, canvas.height);
+
+		istouchingcorona = true;
+
+		coronaviruslives = 2;
+
+		showlife();
+
+		characterY += 5;
+
+		character();
+			
+		animate();
+
+		setTimeout(function() {istouchingcorona = false}, 1000)
+		setTimeout(function() {runscene = 9}, 1000)
+	}
+
+	if(runscene === 9) {
+
+		countdownthree(10)
+	}
+
+	if(runscene === 10) {
+
+		countdowntwo(11);
+	}
+
+	if(runscene === 11) {
+
+		countdownone(12);
+	}
+
+	if(runscene === 12) {
+
+		ctx.clearRect(0,0,canvas.width, canvas.height);
+
+		showlife();
+
+		wavetwo();
+		
+
+		if(practicemode === true) {
+			blockwavetwoheight = blockwavetwoheight + 1.5;
+		}
+
+		if (practicemode === false) {
+			blockwavetwoheight = blockwavetwoheight + 2.5;
+		}
+	
+
+		 wavetwocollisiondetection();
+
+		secondlandscape();
+		character();
+		movement();
+
+		if(characterX > 585){
+			characterX = 585;
+		}
+			
+		if(characterX < 13){
+			characterX = 13;
+		}
+
+		if(characterY > 585){
+			characterY = 585;
+		}
+
+		if(characterY < 78){
+			characterY = 78;
+		}	
+
+		if(characterY === 78 && characterX <=315 && characterX >= 285){ 
+
+			runscene = 13;
+		}
+
+	}
+
+	if(runscene === 13){
+
+		ctx.clearRect(0,0,canvas.width, canvas.height);
+
+		showlife();
+
+		istouchingcorona = true;
+
+		coronaviruslives = 1;
+
+		showlife();
+
+		characterY += 5;
+
+		character();
+			
+		animate();
+
+		setTimeout(function() {istouchingcorona = false}, 1000)
+		setTimeout(function() {runscene = 14}, 1000)
+	}
+	
+	if(runscene === 14) {
+
+		countdownthree(15)
+	}
+
+	if(runscene === 15) {
+
+		countdowntwo(16);
+	}
+
+	if(runscene === 16) {
+
+		countdownone(17);
+	}
+
+	if(runscene === 17) {
+
+		ctx.clearRect(0,0,canvas.width, canvas.height);
+
+		showlife();
+
+		wavethree();
+		
+
+		if(practicemode === true) {
+			blockwavethreeheight = blockwavethreeheight + 2;
+		}
+
+		if (practicemode === false) {
+			blockwavethreeheight = blockwavethreeheight + 2.7;
+		}
+	
+
+		wavethreecollisiondetection();
+
+		secondlandscape();
+		character();
+		movement();
+
+
+		if(characterX > 585){
+			characterX = 585;
+		}
+			
+		if(characterX < 13){
+			characterX = 13;
+		}
+
+		if(characterY > 585){
+			characterY = 585;
+		}
+
+		if(characterY < 78){
+			characterY = 78;
+		}	
+
+		if(characterY === 78 && characterX <=315 && characterX >= 285){ 
+
+			runscene = 18;
+		}
+	}
+
+	if(runscene === 18) {
+		ctx.clearRect(0,0,canvas.width, canvas.height);
+
+		showlife();
+
+		istouchingcorona = true;
+
+		coronaviruslives = 0;
+
+		showlife();
+
+		characterY += 5;
+
+		character();
+			
+		animate();
+
+		setTimeout(function() {istouchingcorona = false}, 1000)
+		setTimeout(function() {runscene = 19}, 1000)
+	}
+
+	if(runscene === 19) {
+		ctx.clearRect(0,0,canvas.width, canvas.height);
+		showlife();
+		character();
+		setTimeout(function() {runscene = 20}, 1500);
+		deadimg();
+	}
+
+	if(runscene === 20) {
+	}
+	
+
+	
+
+
+
+
+
+}
+
+
+setInterval(overall, 10)
+</script>
+
+</body>
+</html>
